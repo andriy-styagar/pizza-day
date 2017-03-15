@@ -26,3 +26,9 @@ practicalmeteor:mocha             # A package for writing and running your meteo
 johanbrook:publication-collector  # Test a Meteor publication by collecting its output
 twbs:bootstrap
 fourseven:scss
+fortawesome:fontawesome
+check
+accounts-password
+accounts-base
+accounts-google
+service-configuration
