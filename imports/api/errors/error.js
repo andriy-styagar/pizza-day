@@ -1,5 +1,5 @@
 
 import {Errors} from './collections.js';
-export function throwErrorr(err){
+export function throwError(err){
 	Errors.insert({message: err});
 }

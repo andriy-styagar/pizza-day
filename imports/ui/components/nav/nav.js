@@ -10,13 +10,9 @@ Template.nav.events({
 });
 Template.nav.helpers({
 	"getUserName"(){
-		var user = Meteor.user();
-		if(user.username){
-			return user.username;
-		}
-		else{
-		//	alert(user.services[0].name);
+		if(Meteor.user()){
 			return user.profile.name;
 		}
+
 	}
 })
