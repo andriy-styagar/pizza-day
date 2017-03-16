@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import './sign_in.html';
 import './sign_up.html';
-console.log("sdd");
+
+import { throwErrorr } from '../../../api/errors/error.js';
+
 Template.sign_in.events({
 	"click #sign_in_but": function(e, t){
 		console.log("ssdsds");
@@ -9,13 +11,12 @@ Template.sign_in.events({
 		const pass  = $("input[name=pass]").val()
 		Meteor.loginWithPassword(email,pass,function (err) {
 			if (err) {
-				alert("Error");
+				throwErrorr(err.reason);
 			}
 		})
 	},
 	"click #sign_in_g_but": function(){
-		//e.preventDefault();
-		console.log("google");
+
 		Meteor.loginWithGoogle();
 	}
 });
@@ -30,7 +31,7 @@ Template.sign_up.events({
 		console.log(option);
 		Meteor.call("signUp",option ,function (err) {
 			if (err) {
-				alert(err.reason);
+				throwErrorr(err.reason);
 			}
 		})
 	}
