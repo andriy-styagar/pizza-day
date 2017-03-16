@@ -1,9 +1,9 @@
-<body>
-	{{> nav}}
-	{{> sign_in}}
-	{{> sign_up}}
-	{{> errors}}
-</body>
-<template name="App_body">
-  {{> Template.dynamic template=main}}
+<template name="main">
+	<body>
+		{{> nav}}
+		{{> sign_in}}
+		{{> sign_up}}
+		{{> errors}}
+		{{> Template.dynamic template=content}}
+	</body>
 </template>

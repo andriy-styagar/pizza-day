@@ -11,7 +11,7 @@ Template.nav.events({
 Template.nav.helpers({
 	"getUserName"(){
 		if(Meteor.user()){
-			return user.profile.name;
+			return Meteor.user().profile.name;
 		}
 
 	}

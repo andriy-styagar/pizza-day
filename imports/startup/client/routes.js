@@ -1,8 +1,11 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
-// Import needed templates
 import '../../ui/layouts/body/body.js';
+import '../../ui/components/users/users.js';
 
-
-// Set up all routes in the app
+FlowRouter.route('/',{
+	action: function (argument) {
+		BlazeLayout.render('main',{content: "users"})
+	}
+});

@@ -1,14 +1,12 @@
 import './users.html';
+import { Template } from 'meteor/templating';
 
-Template.users.onCreated(){
+Template.users.onCreated(function(){
 	this.subscribe("users");
-}
+});
 
 Template.users.helpers({
 	users: function(){
-		const users = Meteor.users.find().fetch();
-		
-		if
-		return 
+		return Meteor.users.find();
 	}
 })
