@@ -3,9 +3,21 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 import '../../ui/layouts/body/body.js';
 import '../../ui/components/users/users.js';
+import '../../ui/components/groups/groups.js';
+
 
 FlowRouter.route('/',{
-	action: function (argument) {
-		BlazeLayout.render('main',{content: "users"})
+	action: function () {
+		BlazeLayout.render('main-layout',{content: "users"})
 	}
 });
+FlowRouter.route('/create-group', {
+	action: function (){
+		BlazeLayout.render('main-layout', {content: 'createGroup'})
+	}
+});
+FlowRouter.route('/groups',{
+	action: function(){
+		BlazeLayout.render('main-layout', {content: 'groups'})
+	}
+})

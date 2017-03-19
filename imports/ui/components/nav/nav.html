@@ -2,10 +2,16 @@
 	<div class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbat-header">
-				 <a class="navbar-brand" href="#">Home</a>
+				 <a class="navbar-brand" href="/">Home</a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li ><a href="#">Groups</a></li>	
+				{{#unless isGroupParticipant}}
+					<li ><a href="/create-group">Create Group</a></li>
+				{{/unless}}
+				<li ><a href="/groups">Groups</a></li>
+				{{#if isGroupParticipant}}
+				<li ><a href="/events">Events</a></li>
+				{{/if}}
 			</ul>
 			<ul class="nav navbar-nav pull-right">
 				{{#if currentUser}}

@@ -1,0 +1,15 @@
+<template name='groups'>
+	<div class="container-fluid">
+		<ul class="list-unstyled">
+			{{#each groups}}
+				<li>
+					<a href="#">
+							<i class="fa fa-group fa-lg"></i>
+							{{name}}
+					</a>
+					<hr>
+				</li>
+			{{/each}}
+		</ul>
+	</div>
+</template>

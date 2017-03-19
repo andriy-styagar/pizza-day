@@ -9,10 +9,13 @@ Template.nav.events({
 	}
 });
 Template.nav.helpers({
-	"getUserName"(){
+	'getUserName'(){
 		if(Meteor.user()){
 			return Meteor.user().profile.name;
 		}
-
+	},
+	'isGroupParticipant'(){
+		return Meteor.user() && Meteor.user().profile.group;
 	}
+
 })

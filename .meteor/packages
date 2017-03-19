@@ -32,3 +32,5 @@ accounts-password
 accounts-base
 accounts-google
 service-configuration
+cfs:standard-packages
+cfs:filesystem
