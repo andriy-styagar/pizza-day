@@ -15,7 +15,7 @@ Template.nav.helpers({
 		}
 	},
 	'isGroupParticipant'(){
-		return Meteor.user() && Meteor.user().profile.group;
+		return Meteor.user().profile.group;
 	}
 
 })

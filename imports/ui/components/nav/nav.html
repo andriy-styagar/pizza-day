@@ -5,6 +5,7 @@
 				 <a class="navbar-brand" href="/">Home</a>
 			</div>
 			<ul class="nav navbar-nav">
+			{{#if currentUser}}
 				{{#unless isGroupParticipant}}
 					<li ><a href="/create-group">Create Group</a></li>
 				{{/unless}}
@@ -12,6 +13,7 @@
 				{{#if isGroupParticipant}}
 				<li ><a href="/events">Events</a></li>
 				{{/if}}
+			{{/if}}
 			</ul>
 			<ul class="nav navbar-nav pull-right">
 				{{#if currentUser}}

@@ -1,9 +1,10 @@
-import './create-group.html';
-import './style.css';
-import './groups.html';
 import { Images, Groups } from '../../../api/groups/collections.js';
 import { throwError } from '../../../api/errors/error.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import './create-group.html';
+import './style.css';
+import './groups.html';
+import './group-item/group-item.js';
 
 Template.createGroup.onCreated(function(){
 	this.subscribe('groups');	
@@ -35,9 +36,5 @@ Template.groups.onCreated(function(){
 Template.groups.helpers({
 	'groups': function(){
 		return Groups.find({});
-	},
-	'images': function(){
-		
-		
 	}
 })

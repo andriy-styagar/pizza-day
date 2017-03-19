@@ -15,13 +15,13 @@ Meteor.methods({
 			if(!err){
 				const userId = Meteor.userId();
 				Meteor.users.update(
-						{ _id: userId },
-						{ $set: {
+					{ _id: userId },
+					{ $set: {
 							'profile.group': groupId,
 							'profile.groupAdmin': true 
-							}
-						});			
-					};
-				});
+						}
+				});			
+			};
+		});
 	}
 });

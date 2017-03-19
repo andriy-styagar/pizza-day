@@ -4,3 +4,27 @@
 	border: 1px solid silver;
 	border-radius: 2px;
 }
+#group_item_left{
+	border-right: 2px solid #fff;
+	background: #fff;
+}
+#group_item_right .nav-tabs{
+	margin-left: 0;
+}
+#group_item_right{
+	background: #fff;
+	border-left: 10px solid #F7F6F3;
+	padding: 0;
+	height: 600px;
+}
+#group_item_right .tab-content{
+	margin: 10px;
+}
+#group-title{
+	margin: 5px;
+}
+#group-button{
+	margin: 0;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
