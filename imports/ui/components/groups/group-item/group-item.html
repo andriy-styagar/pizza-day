@@ -6,8 +6,8 @@
 			</div>
 			<img src="{{groupData.logoUrl}}" class="img-responsive">
 			<div class="" id="group-button">
-			{{#if idGrouppAdmin}}
-				<div class="btn btn-default ">Delete Group</div>
+			{{#if isGrouppAdmin}}
+				<div class="btn btn-default " id="remove-group-but">Delete Group</div>
 			{{/if}}
 			</div>
 		</div>
@@ -15,15 +15,49 @@
 			<ul class="nav nav-tabs">
   				<li class="active"><a data-toggle="tab" href="#participants">Group Participants</a></li>
   				<li><a data-toggle="tab" href="#menu">Menu</a></li>
+  				{{#if isGrouppAdmin}}
+  					<li><a data-toggle="tab" href="#add-participants">Add Participants</a></li>
+				{{/if}}
 			</ul>
 			<div class="tab-content">
   				<div id="participants" class="tab-pane fade in active">
-    				
+  					<ul class="list-unstyled">
+  						{{#with groupData.admin}}
+  							<li>
+    							<i class="fa fa-user" aria-hidden="true"></i>
+    							{{profile.name}}
+    								<span class="pull-right">admin</span>
+    							<hr>
+    						</li>
+  						{{/with}}
+  						{{#each groupData.groupParticipants}}
+    						<li>
+    							<i class="fa fa-user" aria-hidden="true"></i>
+    							{{profile.name}}
+    							{{#if isGrouppAdmin}}
+    								<i class="fa fa-user-times pull-right btn remove-participant-but" id={{_id}}></i>
+    							{{/if}}
+    							<hr>
+    						</li>
+    					{{/each}}
+  					</ul>
   				</div>
   				<div id="menu" class="tab-pane fade">
    				 	
   				</div>
   				<div id="add-participants" class="tab-pane fade">
+    				<ul class="list-unstyled">
+    					{{#each addParticipantsList}}
+    						<li>
+    							<i class="fa fa-user" aria-hidden="true"></i>
+    							{{profile.name}}
+    							{{#if isGrouppAdmin}}
+    							<i class="fa fa-user-plus pull-right btn add-participant-but" id={{_id}}></i>
+    							{{/if}}
+    							<hr>
+    						</li>
+    					{{/each}}
+    				</ul>
     				
   				</div>
 			</div>
