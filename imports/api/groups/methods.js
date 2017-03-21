@@ -53,5 +53,30 @@ Meteor.methods({
 			{$pull: {participants: userId}});
 		Meteor.users.update({ _id: userId },
 			{ $set: {'profile.group': null }});
+		},
+	'addMenuItem'(groupId, name, price){
+		if(!name){
+				throw new Meteor.Error('error', 'Name may not be empty');
 		}
+		const menu = Groups.find({_id: groupId}).fetch()[0].menu;
+		menu.forEach(function(el){
+			if(name == el.name){
+				throw new Meteor.Error('error', 'Item already exists');
+			}
+		});
+		if (!price || !(price * 1)){
+			throw new Meteor.Error('error','Invalid price');
+		};
+		Groups.update(
+		{_id: groupId},
+		{$push: {menu: {name: name, price: price}}});
+	},
+	'removeMenuItem'(groupId, name){
+		check(groupId, String);
+		check(name, String);
+		Groups.update(
+		{_id:  groupId},
+		{$pull: {menu: {name: name}}});
+	}
+	
 });

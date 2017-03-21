@@ -27,6 +27,7 @@ Template.groupItem.helpers({
 					}
 				]},
 				{ fields: {_id: 1, profile: 1 }});
+		data.menu = group.menu;
 		data.admin = Meteor.users.find({_id: group.admin}).fetch()[0];
 		return data
 	},
@@ -73,5 +74,27 @@ Template.groupItem.events({
 			else
 				FlowRouter.go('/groups');
 		})
+	},
+	'click #add-menu-but': function(e, t){
+		e.preventDefault();
+		const name = $('#name-of-pizza-in').val();
+		const price = $('#price-in').val();
+		const groupId = FlowRouter.getParam('groupId');
+		Meteor.call('addMenuItem', groupId, name, price, function(err){
+			if(err){
+				throwError(err.reason);
+			}
+		})
+	},
+	'click .remove-menu-but': function(e, t){
+		e.preventDefault();
+		const name =  $(e.target).attr('name');
+		const groupId = FlowRouter.getParam('groupId');
+		Meteor.call('removeMenuItem',groupId,name, function(err){
+			if (err){
+				throwError(err.reason);
+			}
+		});
 	}
+	
 })
