@@ -1,5 +1,6 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Images, Groups } from '../../../../api/groups/collections.js';
+import { Events } from '../../../../api/events/collections.js';
 import { throwError } from '../../../../api/errors/error.js';
 
 import './group-item.html';
@@ -42,8 +43,7 @@ Template.groupItem.helpers({
 	'isGrouppAdmin'(){
 		const profile = Meteor.user().profile;
 		return profile.group == FlowRouter.getParam('groupId') && profile.groupAdmin;
-	},
-
+	}
 });
 
 Template.groupItem.events({
@@ -95,6 +95,21 @@ Template.groupItem.events({
 				throwError(err.reason);
 			}
 		});
-	}
-	
+	},
+	'click #create-event-but': function (e, t){
+		e.preventDefault();
+		const groupId = FlowRouter.getParam('groupId');
+		Meteor.call('createEvent',groupId, function(err){
+			if (err){
+				throwError(err.error);
+			}
+			else{
+				Meteor.setTimeout(function () {
+					const eventId = Events.find({group: groupId}).fetch()[0]._id;
+					Meteor.call('clearUnconfirmedParticipants', eventId);
+				}, 600000);
+				FlowRouter.go('/events')
+			}
+		});
+	}	
 })

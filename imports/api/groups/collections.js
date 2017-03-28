@@ -1,6 +1,6 @@
 import  { Mongo } from 'meteor/mongo';
 
-const Groups = new Mongo.Collection('groups');
+Groups = new Mongo.Collection('groups');
 
 Groups.allow({
 	insert: function (id, doc) {
@@ -9,9 +9,11 @@ Groups.allow({
 	update: function (id, doc) {
 		return id && Meteor.user().profile.group == doc._id;
 	}
-})
+});
 
- const Images = new FS.Collection('images',{
+
+
+Images = new FS.Collection('images',{
 	 stores: [new FS.Store.FileSystem("images")]
 });
 

@@ -1,0 +1,60 @@
+<template name='event'>
+{{#if getEvent}}
+	{{#if getEvent.isParticipant}}
+		<div class="col-md-6 col-md-offset-3" id="confirm-event-dialog">
+			<h4>Started Event. Confirm Participantion?</h4>		
+			<div class="btn btn-default" id="confirm-ev-but">Confirm</div>
+			<div class="btn btn-default" id="refuse-ev-but">Refuse</div>
+		</div>
+	{{else if getEvent.isConfirmedParticipant}}
+		<div class="col-md-3" style="padding: 5px;" >
+		 <div id="event-info">
+		 	<div class="row text-center" id="event-name">
+				<h5>Pizza day for <a href="/groups/{{eventData.groupId}}">{{eventData.group}}</a></h5>
+			</div>
+			<div class="">
+				<ul class="list-unstyled" style="">
+					<li ><span>status: {{eventData.status}}</span><hr ></li>
+					<li ><span>date: {{eventData.date}}</span><hr></li>
+					<li ><span>participanrs: {{eventData.numParticipants}}</span><hr></li>
+				</ul>
+
+			</div>
+		 </div>
+		 	{{#if getEvent.isEventCreator}}
+				<div class="btn btn-default" id="delete-ev-but">Delete Event</div>
+				<div class="btn btn-default" id="delete-ev-but">Change Status</div>
+			{{/if}}
+		</div>
+		<div class="col-md-9" id="event-data">
+			<div style="background: #fff; min-height: 500px;" >
+				<ul class="nav nav-tabs" >
+					<li>
+						<a data-toggle="tab" href="#event-participants">
+							 Participants
+						</a>
+					</li>
+					<li>
+						<a data-toggle="tab" href="#event-participants">
+							Ordered participants
+						</a>
+					</li>
+					<li>
+						<a data-toggle="tab" href="#event-participants">
+							My Order
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content" >
+					<div class="tab-pane" id="event-participants">
+							
+					</div>		
+				</div>
+			</div>	
+		</div>
+	{{/if}}
+{{else}}
+		<h4>No Events</h4>
+{{/if}}
+
+</template>

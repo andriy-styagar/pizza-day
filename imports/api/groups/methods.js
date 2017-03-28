@@ -14,6 +14,11 @@ Meteor.methods({
 		}, function (err, groupId) {
 			if(!err){
 				const userId = Meteor.userId();
+				Groups.update(
+					{_id: groupId}, 
+					{ $push: {
+						participants: Meteor.userId()
+				}});
 				Meteor.users.update(
 					{ _id: userId },
 					{ $set: {
