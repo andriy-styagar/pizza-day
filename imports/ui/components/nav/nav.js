@@ -4,18 +4,18 @@ Template.nav.events({
 	"click #log_out_but": function (e, t) {
 		Meteor.logout(function(err){
 			if(err)
-				alert(err.reason);
+				swal('', err.reason, 'error');
 		});
 	}
 });
 Template.nav.helpers({
-	'getUserName'(){
+	'userName'(){
 		if(Meteor.user()){
 			return Meteor.user().profile.name;
 		}
 	},
 	'isGroupParticipant'(){
-		return Meteor.user().profile.group;
+		return Meteor.user().group;
 	}
 
 })

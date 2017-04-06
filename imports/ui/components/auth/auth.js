@@ -2,24 +2,21 @@ import { Meteor } from 'meteor/meteor';
 import './sign_in.html';
 import './sign_up.html';
 
-import { throwError } from '../../../api/errors/error.js';
-
 Template.sign_in.events({
 	"click #sign_in_but": function(e, t){
 		console.log("ssdsds");
 		const email = $("input[name=email]").val();
 		const pass  = $("input[name=pass]").val()
-		Meteor.loginWithPassword(email,pass,function (err) {
+		Meteor.loginWithPassword(email, pass, function (err) {
 			if (err) {
-				throwError(err.reason);
+				swal('', err.reason, 'error');
 			}
 		})
 	},
 	"click #sign_in_g_but": function(){
-		Meteor.loginWithGoogle();
+			Meteor.loginWithGoogle();
 	}
 });
-
 Template.sign_up.events({
 	"click #sign_up_but": function(e, t){
 		const option = {};
@@ -31,13 +28,12 @@ Template.sign_up.events({
 				option.profile.name = name;
 				Accounts.createUser(option,function(err){
 				if (err){
-					throwError(err.reason);
+					swal('', err.reason, 'error');
 					}
 				});
 			}
 			else
-				throwError("Name may not be empty")
-			
+				swal('', 'Name may not be empty', 'error');			
 	}
 	
 });

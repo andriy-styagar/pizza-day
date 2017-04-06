@@ -8,11 +8,13 @@ hr{
 	border-radius: 2px;
 }
 #group_item_left{
-	border-right: 2px solid #fff;
-	background: #fff;
+	background: #fff
 }
 #group_item_right .nav-tabs{
 	margin-left: 0;
+}
+#group-title{
+	background: #fff;
 }
 #group_item_right{
 	background: #fff;

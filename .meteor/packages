@@ -34,3 +34,5 @@ accounts-google
 service-configuration
 cfs:standard-packages
 cfs:filesystem
+reactive-dict
+kevohagan:sweetalert

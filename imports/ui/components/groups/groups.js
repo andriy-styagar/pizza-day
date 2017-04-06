@@ -1,5 +1,4 @@
 import { Images, Groups } from '../../../api/groups/collections.js';
-import { throwError } from '../../../api/errors/error.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import './create-group.html';
 import './style.css';
@@ -16,12 +15,12 @@ Template.createGroup.events({
 		const groupName = $('input[name=group-name]').val();
 		const logoId = Images.insert(new FS.File(logo),function(err,file){
 			if(err){
-				throwError(err.reason);
+				swal('', err.reason, 'error');
 			}
 		})._id;
 		Meteor.call('createGroup', groupName, logoId,function (err) {
 			if(err){
-				throwError(err.reason);
+				swal('', err.reason, 'error');
 			}
 			else{
 				FlowRouter.go('/groups');

@@ -1,48 +1,65 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Images, Groups } from '../../../../api/groups/collections.js';
 import { Events } from '../../../../api/events/collections.js';
-import { throwError } from '../../../../api/errors/error.js';
 
 import './group-item.html';
+function errorHandler(err){
+			if(err){
+				swal('', err, "error");
+			}
+		}
 
 Template.groupItem.onCreated(function () {
-	const groupId = FlowRouter.getParam('groupId');
-	Meteor.subscribe('groupItem', groupId, function(){
-			const group = Groups.find({_id: FlowRouter.getParam('groupId')}).fetch()[0];
-			Meteor.subscribe('images', group.logo);
+	this.groupId = FlowRouter.getParam('groupId');
+	const instance = this;
+	instance.autorun(function (argument) {
+		const group = instance.subscribe('groupItem',instance.groupId);
+		if(group.ready()){
+			const logoId =  Groups.findOne({_id: instance.groupId}).logo;
+			instance.subscribe('images', logoId);
+			instance.subscribe('events', instance.groupId);
+		}
+		instance.subscribe('users');
 	});
-	Meteor.subscribe('users');
 })
 Template.groupItem.helpers({
-	'groupData'(){
-		const group = Groups.find({_id: FlowRouter.getParam('groupId')}).fetch()[0];
-		const data = {};
-		data.name = group.name;
-		data.logoUrl = Images.find({_id: group.logo}).fetch()[0].url();
-		data.groupParticipants = Meteor.users.find(
+	'group'(){
+		Template.instance().group = Groups.find({_id: FlowRouter.getParam('groupId')});
+			return Template.instance().group.fetch()[0];
+	},
+	'groupParticipants'(){
+			 const participants =  Meteor.users.find(
 				{ $and: [
-					{'profile.group': FlowRouter.getParam('groupId')},
+					{'group': Template.instance().groupId},
 					{ $or: [
-						{'profile.groupAdmin': false },
-						{"profile.groupAdmin": { $exists: false}}] 
+						{'groupAdmin': false },
+						{"groupAdmin": { $exists: false}}] 
 					}
 				]},
 				{ fields: {_id: 1, profile: 1 }});
-		data.menu = group.menu;
-		data.admin = Meteor.users.find({_id: group.admin}).fetch()[0];
-		return data
+			 return participants;
 	},
 	'addParticipantsList'(){
 		const users = Meteor.users.find({ $or: [
-			{"profile.group": null},
-			{"profile.group": {$exists: false}},
+			{"group": null},
+			{"group": {$exists: false}},
 			{ fields: {_id: 1, profile: 1 }}
 		]});
 		return users;
 	},
 	'isGrouppAdmin'(){
-		const profile = Meteor.user().profile;
-		return profile.group == FlowRouter.getParam('groupId') && profile.groupAdmin;
+		const group = Meteor.user().group;
+		return (group == Template.instance().groupId) && Meteor.user().groupAdmin;
+		
+	},
+	'logoUrl'(){
+		return Images.findOne({_id: Template.instance().group.fetch()[0].logo}).url();
+	},
+	'groupAdmnin'(){
+		return Meteor.users.findOne({_id: Template.instance().group.fetch()[0].admin});
+	},
+	'isEvent'(){
+		return Events.findOne({group: Template.instance().groupId});
 	}
 });
 
@@ -50,26 +67,18 @@ Template.groupItem.events({
 	'click .add-participant-but': function(e, t){
 		const userId = $(e.target).attr('id');
 		const groupId = FlowRouter.getParam('groupId');
-		Meteor.call('addParticapant', userId, groupId, function (err) {
-			if(err){
-				throwError(err.reason);
-			}
-		})
+		Meteor.call('addParticapant', userId, groupId, errorHandler)
 	},
 	'click .remove-participant-but': function(e, t){
 		const userId = $(e.target).attr('id');
 		const groupId = FlowRouter.getParam('groupId');
-		Meteor.call('removeParticipant', userId, groupId, function (err) {
-			if(err){
-				throwError(err.reason);
-			}
-		})
+		Meteor.call('removeParticipant', userId, groupId, errorHandler)
 	},
 	'click #remove-group-but': function(e, t){
 		const groupId = FlowRouter.getParam('groupId');
 		Meteor.call('removeGroup', groupId, function (err) {
 			if(err){
-				throwError(err.reason);
+				swal('', err.reason, "error");
 			}
 			else
 				FlowRouter.go('/groups');
@@ -80,34 +89,22 @@ Template.groupItem.events({
 		const name = $('#name-of-pizza-in').val();
 		const price = $('#price-in').val();
 		const groupId = FlowRouter.getParam('groupId');
-		Meteor.call('addMenuItem', groupId, name, price, function(err){
-			if(err){
-				throwError(err.reason);
-			}
-		})
+		Meteor.call('addMenuItem', groupId, name, price, errorHandler);
 	},
 	'click .remove-menu-but': function(e, t){
 		e.preventDefault();
 		const name =  $(e.target).attr('name');
 		const groupId = FlowRouter.getParam('groupId');
-		Meteor.call('removeMenuItem',groupId,name, function(err){
-			if (err){
-				throwError(err.reason);
-			}
-		});
+		Meteor.call('removeMenuItem',groupId,name, errorHandler);
 	},
 	'click #create-event-but': function (e, t){
 		e.preventDefault();
 		const groupId = FlowRouter.getParam('groupId');
 		Meteor.call('createEvent',groupId, function(err){
 			if (err){
-				throwError(err.error);
+				swal('', err.reason, "error");
 			}
 			else{
-				Meteor.setTimeout(function () {
-					const eventId = Events.find({group: groupId}).fetch()[0]._id;
-					Meteor.call('clearUnconfirmedParticipants', eventId);
-				}, 600000);
 				FlowRouter.go('/events')
 			}
 		});

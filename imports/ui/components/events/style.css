@@ -26,5 +26,9 @@
 }
 #event-data div{
 	background: #fff;
-	 min-height: 500px;
+	 min-height: 600px;
+}
+#ev-admin-pannel div{
+	border-radius: 0;
+	background: #fff;
 }

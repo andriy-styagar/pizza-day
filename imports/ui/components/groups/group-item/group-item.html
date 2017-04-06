@@ -2,16 +2,16 @@
 <div class="container-fluid">
 		<div class="col-md-3 " id="group_item_left">
 			<div id="group-title" class="text-center">
-				<h4>{{groupData.name}}</h4>
+				<h4>{{group.name}}</h4>
 			</div>
-			<img src="{{groupData.logoUrl}}" class="img-responsive">
+			<img src="{{logoUrl}}" class="img-responsive">
 			<div class="" id="group-button">
 			{{#if isGrouppAdmin}}
 				<div class="btn btn-default " id="remove-group-but">Delete Group</div>
-        {{#unless getEvent}}
+        {{#unless isEvent}}
           <div class="btn btn-default " id="create-event-but">Create Event</div>
         {{/unless}}
-			{{/if}}
+  	{{/if}}
 			</div>
 		</div>
 		<div class="col-md-9" id="group_item_right">
@@ -25,15 +25,15 @@
 			<div class="tab-content">
   				<div id="participants" class="tab-pane fade in active">
   					<ul class="list-unstyled">
-  						{{#with groupData.admin}}
+  						
   							<li>
     							<i class="fa fa-user" aria-hidden="true"></i>
-    							{{profile.name}}
+    							{{groupAdmnin.profile.name}}
     								<span class="pull-right">admin</span>
     							<hr>
     						</li>
-  						{{/with}}
-  						{{#each groupData.groupParticipants}}
+  						
+  						{{#each groupParticipants}}
     						<li>
     							<i class="fa fa-user" aria-hidden="true"></i>
     							{{profile.name}}
@@ -55,8 +55,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {{#if groupData.menu}}
-                   {{#each groupData.menu}}
+                  {{#if group.menu}}
+                   {{#each group.menu}}
                        <tr>
                         <td>{{name}}</td>
                         <td>{{price}}</td>
