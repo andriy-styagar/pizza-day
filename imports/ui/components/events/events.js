@@ -2,7 +2,6 @@ import './events.html';
 import './style.css';
 import { Events } from '../../../api/events/collections.js';
 
-
 function errorHandler(err){
 			if(err){
 				swal('', err.error, "error");
@@ -22,7 +21,6 @@ Template.event.onCreated(function () {
 })
 
 Template.event.helpers({
-	
 	'event'(){
 		const event = Events.find({group: Meteor.user().group});
 		Template.instance().event = event;
@@ -131,7 +129,6 @@ Template.event.events({
 		const name = $(e.target).attr('name');
 		const item = Template.instance().orderItems.get(name);
 		const newOrderPrice = Template.instance().orderPrice.get() - (item.price / item.num)
-		 
 		if(item.num > 1){
 			const newPrice = item.price - (item.price / item.num);
 			const newNum = item.num - 1;
@@ -141,9 +138,7 @@ Template.event.events({
 		else{
 			t.orderItems.delete(name);
 			t.orderPrice.set(newOrderPrice);
-
 		}
-
 	},
 	'click #create-order-but': function (e, t) {
 		const orderItems  = t.orderItems.all();
@@ -160,7 +155,14 @@ Template.event.events({
 			if (err) {
 				swal('', err.reason, 'error');
 			}
-		} )
+		})
+	},
+	'click #change-st-but': function (e, t) {
+			Meteor.call('changeStatus', t.eventId, function (err) {
+			if (err) {
+				swal('', err.reason, 'error');
+			}
+		});
 	}
 })
 

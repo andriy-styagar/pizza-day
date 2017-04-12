@@ -1,52 +1,52 @@
 <template name='groupItem'>
-<div class="container-fluid">
-		<div class="col-md-3 " id="group_item_left">
-			<div id="group-title" class="text-center">
-				<h4>{{group.name}}</h4>
-			</div>
-			<img src="{{logoUrl}}" class="img-responsive">
-			<div class="" id="group-button">
-			{{#if isGrouppAdmin}}
-				<div class="btn btn-default " id="remove-group-but">Delete Group</div>
+  <div class="row" style="margin: 0">
+    <div class="col-md-3 " id="group_item_left">
+      <div id="group-title" class="text-center">
+        <h4>{{group.name}}</h4>
+      </div>
+      <img src="{{logoUrl}}" class="img-responsive">
+      <div class="" id="group-button">
+      {{#if isGrouppAdmin}}
+        <div class="btn btn-default " id="remove-group-but">Delete Group</div>
         {{#unless isEvent}}
           <div class="btn btn-default " id="create-event-but">Create Event</div>
         {{/unless}}
-  	{{/if}}
-			</div>
-		</div>
-		<div class="col-md-9" id="group_item_right">
-			<ul class="nav nav-tabs">
-  				<li class="active"><a data-toggle="tab" href="#participants">Group Participants</a></li>
-  				<li><a data-toggle="tab" href="#menu">Menu</a></li>
-  				{{#if isGrouppAdmin}}
-  					<li><a data-toggle="tab" href="#add-participants">Add Participants</a></li>
-				{{/if}}
-			</ul>
-			<div class="tab-content">
-  				<div id="participants" class="tab-pane fade in active">
-  					<ul class="list-unstyled">
-  						
-  							<li>
-    							<i class="fa fa-user" aria-hidden="true"></i>
-    							{{groupAdmnin.profile.name}}
-    								<span class="pull-right">admin</span>
-    							<hr>
-    						</li>
-  						
-  						{{#each groupParticipants}}
-    						<li>
-    							<i class="fa fa-user" aria-hidden="true"></i>
-    							{{profile.name}}
-    							{{#if isGrouppAdmin}}
-    								<i class="fa fa-user-times pull-right btn remove-participant-but" id={{_id}}></i>
-    							{{/if}}
-    							<hr>
-    						</li>
-    					{{/each}}
-  					</ul>
-  				</div>
-  				<div id="menu" class="tab-pane fade">
-   				 	   <table class="table">
+    {{/if}}
+      </div>
+    </div>
+    <div class="col-md-9" id="group_item_right">
+      <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#participants">Group Participants</a></li>
+          <li><a data-toggle="tab" href="#menu">Menu</a></li>
+          {{#if isGrouppAdmin}}
+            <li><a data-toggle="tab" href="#add-participants">Add Participants</a></li>
+        {{/if}}
+      </ul>
+      <div class="tab-content">
+          <div id="participants" class="tab-pane fade in active">
+            <ul class="list-unstyled">
+              
+                <li>
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  {{groupAdmnin.profile.name}}
+                    <span class="pull-right">admin</span>
+                  <hr>
+                </li>
+              
+              {{#each groupParticipants}}
+                <li>
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  {{profile.name}}
+                  {{#if isGrouppAdmin}}
+                    <i class="fa fa-user-times pull-right btn remove-participant-but" id={{_id}}></i>
+                  {{/if}}
+                  <hr>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+          <div id="menu" class="tab-pane fade">
+               <table class="table">
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -79,23 +79,23 @@
                 </div>
                 <button class="btn btn-default" id="add-menu-but">Add</button>
             </form>
-  				</div>
-  				<div id="add-participants" class="tab-pane fade">
-    				<ul class="list-unstyled">
-    					{{#each addParticipantsList}}
-    						<li>
-    							<i class="fa fa-user" aria-hidden="true"></i>
-    							{{profile.name}}
-    							{{#if isGrouppAdmin}}
-    							<i class="fa fa-user-plus pull-right btn add-participant-but" id={{_id}}></i>
-    							{{/if}}
-    							<hr>
-    						</li>
-    					{{/each}}
-    				</ul>
-    				
-  				</div>
-			</div>
-		</div>
-</div>
+          </div>
+          <div id="add-participants" class="tab-pane fade">
+            <ul class="list-unstyled">
+              {{#each addParticipantsList}}
+                <li>
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  {{profile.name}}
+                  {{#if isGrouppAdmin}}
+                  <i class="fa fa-user-plus pull-right btn add-participant-but" id={{_id}}></i>
+                  {{/if}}
+                  <hr>
+                </li>
+              {{/each}}
+            </ul>
+            
+          </div>
+      </div>
+    </div>
+  </div>
 </template>

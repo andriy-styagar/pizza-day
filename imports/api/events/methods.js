@@ -140,7 +140,13 @@ Meteor.methods({
 					}
 					orderItems.push({name: key, num: order.orderItems[key].num, price: order.orderItems[key].price})
 				};
-				const emailAdd = Meteor.users.findOne({_id: order.userId}).emails[0].address;
+				const user = Meteor.users.findOne({_id: order.userId});
+				if(user.emails){
+					emailAdd = user.emails[0].address;
+				}
+				else{
+					emailAdd = user.services.google.email
+				}
 				Email.send({
   					to: emailAdd,
   					from: "pizza-day@email.com",
@@ -159,19 +165,40 @@ Meteor.methods({
 					adminOrder.orderItems.push({name: key, num: order.orderItems[key].num, price: order.orderItems[key].price})
 				};
 				adminOrder.orderPrice = order.orderPrice;
-				adminEmail = Meteor.users.findOne({_id: order.userId}).emails[0].address;
+				const user = Meteor.users.findOne({_id: order.userId});
+				if(user.emails){
+					adminEmail = user.emails[0].address;
+				}
+				else{
+					adminEmail = user.services.google.email
+				}
 			}
 		});
-		let arrOfItems = [];
+		let arrOfAllItems = [];
 		for(key in allOrdersItems){
-			arrOfItems.push(allOrdersItems[key]);
+			arrOfAllItems.push(allOrdersItems[key]);
 		}
 		const totalPrice = event.totalPrice;
 		Email.send({
   					to: adminEmail,
   					from: "pizza-day@email.com",
   					subject: "Your Order",
-  					html: SSR.render('htmlAdminEmail', { adminOrder, arrOfItems,  totalPrice})
+  					html: SSR.render('htmlAdminEmail', { adminOrder, arrOfAllItems,  totalPrice})
 		});
+	},
+	'changeStatus'(eventId){
+		if(Events.findOne({_id: eventId}).creator != this.userId){
+			throw new Meteor.Error('Acces Denied');
+		};
+		const event = Events.findOne({_id: eventId});
+		const status = event.status;
+		switch(status){
+			case 'ordered':
+				Events.update({_id: eventId},{ $set: {status: 'delivering'}});
+				break;
+			case 'delivering':
+				Events.update({_id: eventId},{ $set: {status: 'delivered'}});
+				break;
+		}
 	}
 });
