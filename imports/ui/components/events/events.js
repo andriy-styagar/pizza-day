@@ -24,8 +24,9 @@ Template.event.onCreated(function () {
 Template.event.helpers({
 	
 	'event'(){
-		const groupId = Meteor.user().group;
-		Template.instance().event = Events.find({group: groupId});
+		const event = Events.find({group: Meteor.user().group});
+		Template.instance().event = event;
+		Template.instance().eventId = event.fetch()[0]._id;
 		return Template.instance().event.fetch()[0];
 	},
 	'eventDate'(){
@@ -101,17 +102,14 @@ Template.event.helpers({
 });
 
 Template.event.events({
-	'click #confirm-ev-but': function(){
-		const eventId = Events.find({group: Meteor.user().group}).fetch()[0]._id;
-		Meteor.call('confirmEvent',eventId, errorHandler)
+	'click #confirm-ev-but': function(e, t){
+		Meteor.call('confirmEvent',t.eventId, errorHandler)
 	},
-	'click #refuse-ev-but': function(){
-		const eventId = Events.find({group: Meteor.user().group}).fetch()[0]._id;
-		Meteor.call('refuseEvent',eventId, errorHandler);
+	'click #refuse-ev-but': function(e, t){
+		Meteor.call('refuseEvent',t.eventId, errorHandler);
 	},
-	'click #delete-ev-but': function(){
-		const eventId = Events.find({group: Meteor.user().group}).fetch()[0]._id;
-		Meteor.call('deleteEvent',eventId, errorHandler)
+	'click #delete-ev-but': function(e, t){
+		Meteor.call('deleteEvent',t.eventId, errorHandler)
 	},
 	'click .add-order-item-but': function(e, t){
 		const name = $(e.target).attr('name');
@@ -150,7 +148,7 @@ Template.event.events({
 	'click #create-order-but': function (e, t) {
 		const orderItems  = t.orderItems.all();
 		const orderPrice = t.orderPrice.get();
-		Meteor.call('createOrder',orderItems, orderPrice, Meteor.user().group, function(err){
+		Meteor.call('createOrder',orderItems, orderPrice, t.eventId, function(err){
 			if (err) {
 				swal('', err.reason, 'error');
 			}
@@ -158,7 +156,7 @@ Template.event.events({
 		})
 	},
 	'click #delete-order-but': function(e, t){
-		Meteor.call('deleteOrder', Meteor.user().group, function (err) {
+		Meteor.call('deleteOrder', t.eventId, function (err) {
 			if (err) {
 				swal('', err.reason, 'error');
 			}

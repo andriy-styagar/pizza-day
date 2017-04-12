@@ -1,0 +1,63 @@
+<html>
+<head>
+	<title></title>
+    <style>
+        table {
+            border-collapse: collapse;
+             width: 100%;
+        }
+
+        th, td {
+             text-align: left;
+             padding: 8px;
+        }
+        tr:nth-child(even){background-color: #f2f2f2}
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+	<div>
+		<h3>Your Order</h3>
+		<table>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        {{#each adminOrder.orderItems}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{num}}</td>
+                <td>${{price}}$</td>
+            </tr>
+        {{/each}}
+             <tr style="border-top: 1px solid black">
+                <td colspan='2'>Order Price</td>
+                <td text-align='right'>{{adminOrder.orderPrice}}$</td>
+            </tr>
+        </table>
+    </div>
+        <div>
+        <h3>All Orders</h3>
+        <table>
+            <tr>
+                <th colspan='2'>Name</th>
+                <th>Quantity</th>
+            </tr>
+        {{#each arrOfItems}}
+            <tr>
+                <td colspan='2'>{{name}}</td>
+                <td>{{num}}</td>
+            </tr>
+        {{/each}}
+             <tr style="border-top: 1px solid black">
+                <td colspan='2'>Tota Price</td>
+                <td text-align='right'>{{totalPrice}}$</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

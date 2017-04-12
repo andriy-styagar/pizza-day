@@ -36,3 +36,5 @@ cfs:standard-packages
 cfs:filesystem
 reactive-dict
 kevohagan:sweetalert
+email
+meteorhacks:ssr
