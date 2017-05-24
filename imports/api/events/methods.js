@@ -1,113 +1,183 @@
 import { Events } from './collections.js';
-import { Match } from 'meteor/check';
 import { Groups } from '../groups/collections.js';
-import { Email } from 'meteor/email';
-import { SSR } from 'meteor/meteorhacks:ssr';
-const NonEmptyString = Match.Where((x) => {
-  			check(x, String);
- 			 return x.length > 0;
-		});
 
+function checkAuthorisation(userId){
+	if(!userId){
+		throw new Meteor.Error('Not Authorized');
+	}
+}
+function checkEventParticipation(event, userId){
+	if(event.confirmedParticipants.indexOf(userId) === -1){
+			throw new Meteor.Error('Acces denied');
+	};
+}
 Meteor.methods({
 	'createEvent'(groupId){
-		check(groupId, NonEmptyString);
+		const curentUser = this.userId;
+		checkAuthorisation(curentUser);
+		check(groupId, String);
 		const group = Groups.findOne({_id: groupId});
-		if(group.admin !== Meteor.userId()){
+		if(group.participants.indexOf(curentUser) === -1){
 			throw new Meteor.Error('Acces denied');
 		}
-		Events.insert({
-			date: new Date(),
+		const unconfirmedParticipants = group.participants;
+		const indAdminId = unconfirmedParticipants.indexOf(curentUser);
+		unconfirmedParticipants.splice(indAdminId, 1);
+		const eventId = Events.insert({
+			date: new Date().toString(),
 			status: 'ordering',
 			group: groupId,
 			groupName: group.name,
-			creator: group.admin,
+			creator: curentUser,
 			menu: group.menu,
-			unconfirmedParticipants: group.participants,
-			confirmedParticipants: [Meteor.userId()],
+			unconfirmedParticipants: unconfirmedParticipants,
+			confirmedParticipants: [ curentUser ],
 			orderedParticipants: [],
 			orders: [],
 			totalPrice: 0
 		});
-		Events.update(
-			{creator: Meteor.userId()},
-			{
-				$pull: { unconfirmedParticipants: Meteor.userId()}
-			});
+		return eventId;
 	},
-	'confirmEvent'(eventId){
-		check(eventId, NonEmptyString);
-		Events.update(
-			{_id: eventId},
-			{
-				$push: { confirmedParticipants: Meteor.userId()},
-				$pull: { unconfirmedParticipants: Meteor.userId()}
-			});
-	},
-	'refuseEvent'(eventId){
-		check(eventId, NonEmptyString);
-		Events.update(
-			{_id: eventId},
-			{
-				$pull: { unconfirmedParticipants: Meteor.userId()}
-			});
-		const e = Events.findOne({_id: eventId});
-		if((e.unconfirmedParticipants.length == 0) && (e.confirmedParticipants.length == e.orderedParticipants.length)){
-			Events.update(
-				{ _id: eventId },
-				{ $set: {status: 'ordered' }});
-				Meteor.call('sendEmails', eventId);
+	'confirmEvent'(eventId, val){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser)		
+		check(eventId, String);
+		const event = Events.findOne({ _id: eventId });
+		if(event.unconfirmedParticipants.indexOf(curentUser) == -1){
+			throw new Meteor.Error('Acces Denied');
 		}
+		if(val === 'confirm'){
+			Events.update(
+			{_id: eventId},
+			{
+				$push: { confirmedParticipants: curentUser},
+				$pull: { unconfirmedParticipants: curentUser}
+			});
+		}
+		else{
+			Events.update(
+			{_id: eventId},
+			{
+				$pull: { unconfirmedParticipants: curentUser}
+			});
+			Meteor.call('checkOrderedStatus', eventId);
+		}	
 	},
 	'deleteEvent'(eventId){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser)
 		const event = Events.findOne({_id: eventId});
-		if(event.creator != Meteor.userId()){
+		if(event.creator != curentUser){
 			throw new Meteor.Error('Acces denied');
 		}
 		Events.remove({_id: eventId});
 	},
-	'createOrder'(orderItems, orderPrice, eventId){
-		check(orderItems, Object),
-		check(orderPrice, Number);
-		check(eventId, NonEmptyString);
+	'createOrder'(order, eventId){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
+		check(order, Object),
+		check(eventId, String);
 		const event = Events.findOne({_id: eventId});
-		if(event.confirmedParticipants.indexOf(this.userId) == -1){
-			throw new Meteor.Error('Acces denied');
-		};
-		if(orderItems == {}){
+		checkEventParticipation(event, curentUser)
+		if(order === null || Object.keys(order).length <= 1){
 			Events.update(
-			{ _id: eventId},
-			{ 
-				$push: {orderedParticipants: userId}
-			});
+				{ _id: eventId },
+				{ 
+					$push: { orderedParticipants: curentUser}
+				});	
 		}
 		else{
-			const orderObj = {
-				userId: this.userId,
-				orderItems,
-				orderPrice
-			};
-			const userId = this.userId;
+			const orderItems = [];
+			for(key in order){
+				if(key === 'orderPrice'){
+					continue;
+				}
+				orderItems.push(order[key]);
+			}
+			const orderObj = {orderPrice: order.orderPrice, orderItems, userId: curentUser};
 			Events.update(
 				{_id: eventId},
 				{ 
-					$push: { orders: orderObj, orderedParticipants: userId},
-			 		$set: { totalPrice: event.totalPrice + orderObj.orderPrice }
+					$push: { orders: orderObj, orderedParticipants: curentUser},
+			 		$set: { totalPrice: event.totalPrice + order.orderPrice }
 				});
-			const e = Events.findOne({_id: eventId});
-			if((e.unconfirmedParticipants.length == 0) && (e.confirmedParticipants.length == e.orderedParticipants.length)){
-				Events.update(
-					{ _id: eventId },
-					{ $set: {status: 'ordered' }});
-					Meteor.call('sendEmails', eventId);
-				}
-			}	
+		}
+		Meteor.call('checkOrderedStatus', eventId);	
+	},
+	'checkOrderedStatus'(eventId){
+		const curentUser = this.userId;
+		checkAuthorisation(curentUser);
+		const event = Events.findOne({_id: eventId});
+		checkEventParticipation(event, curentUser)
+		if((event.unconfirmedParticipants.length === 0) && (event.confirmedParticipants.length === event.orderedParticipants.length)){
+			Events.update(
+				{ _id: eventId },
+				{ $set: { status: 'ordered' }});
+			Meteor.call('sendEmails', eventId);
+		}
+	},
+	'sendEmails'(eventId){
+		const curentUser = this.userId;
+		checkAuthorisation(curentUser);
+		const event = Events.findOne({_id: eventId});
+		checkEventParticipation(event, curentUser)
+		const orders = event.orders;
+		const eventCreator = event.creator;
+		SSR.compileTemplate('htmlUserEmail', Assets.getText('user-mail.html'));
+		SSR.compileTemplate('htmlAdminEmail', Assets.getText('admin-mail.html'));
+		const allOrdersItems = {};
+		let adminOrder = null;
+		let adminEmailAdd = null;
+		orders.forEach(function (order) {
+			order.orderItems.forEach(function (item) {
+				if(allOrdersItems[item.name])
+					allOrdersItems[item.name] += item.num
+				else
+					allOrdersItems[item.name] = item.num;
+			});
+			const user = Meteor.users.findOne({_id: order.userId});
+			if(user.emails)
+				emailAdd = user.emails[0].address;
+			else
+				emailAdd = user.services.google.email
+			if(order.userId === eventCreator){
+				adminOrder = order;
+				adminEmailAdd = emailAdd;
+			}
+			else{
+				Email.send({
+  					to: emailAdd,
+  					from: "pizza-day@email.com",
+  					subject: "Your Order",
+  					html: SSR.render('htmlUserEmail', { orderItems: order.orderItems, orderPrice: order.orderPrice}),
+				});
+			}
+		});
+		let arrOfAllItems = [];
+		for(key in allOrdersItems){
+			arrOfAllItems.push({name: key, num: allOrdersItems[key]});
+		}
+		const totalPrice = event.totalPrice;
+		Email.send({
+  			to: adminEmailAdd,
+  			from: "pizza-day@email.com",
+  			subject: "Your Order",
+  			html: SSR.render('htmlAdminEmail', { adminOrder, arrOfAllItems,  totalPrice})
+		});	
 	},
 	'deleteOrder'(eventId){
-		const userId = this.userId;
-		const event = Events.findOne({_id: eventId});
-		let orderPrice;
+		const curentUser = this.userId;
+		checkAuthorisation(curentUser);
+		const event = Events.findOne({ _id: eventId });
+		if(event.status !== 'ordering'){
+			throw new Meteor.Error('orders can not be removed');
+		};
+		if(event.orderedParticipants.indexOf(curentUser) === -1){
+			throw new Meteor.Error('Acces Denied');
+		};
+		let orderPrice = null;
 		event.orders.forEach(function (el) {
-			if (el.userId == userId) {
+			if (el.userId == curentUser) {
 				orderPrice = el.orderPrice;
 			}
 		})
@@ -115,82 +185,17 @@ Meteor.methods({
 		Events.update(
 			{ _id: eventId },
 			{ 
-				$pull: {orders: {userId: userId}, orderedParticipants: userId},
+				$pull: {orders: {userId: curentUser}, orderedParticipants: curentUser},
 				$set: { totalPrice: newTotalPrice }
 			});
 	},
-	'sendEmails'(eventId){
-		const event = Events.findOne({_id: eventId});
-		const orders = event.orders;
-		const eventCreator = event.creator;
-		SSR.compileTemplate('htmlUserEmail', Assets.getText('user-mail.html'));
-		SSR.compileTemplate('htmlAdminEmail', Assets.getText('admin-mail.html'));
-		let allOrdersItems = {};
-		let adminOrder = {orderItems: [], orderPrice: 0};
-		let adminEmail = '';
-		orders.forEach(function(order){
-			if(order.userId != event.creator){
-				let orderItems = [];
-				for(key in order.orderItems){
-					if(allOrdersItems[key]){
-						allOrdersItems[key].num += order.orderItems[key].num;
-					}
-					else{
-						allOrdersItems[key] = {name: key, num: order.orderItems[key].num}
-					}
-					orderItems.push({name: key, num: order.orderItems[key].num, price: order.orderItems[key].price})
-				};
-				const user = Meteor.users.findOne({_id: order.userId});
-				if(user.emails){
-					emailAdd = user.emails[0].address;
-				}
-				else{
-					emailAdd = user.services.google.email
-				}
-				Email.send({
-  					to: emailAdd,
-  					from: "pizza-day@email.com",
-  					subject: "Your Order",
-  					html: SSR.render('htmlUserEmail', { orderItems, orderPrice: order.orderPrice}),
-				});
-			}
-			else{
-				for(key in order.orderItems){
-					if(allOrdersItems[key]){
-						allOrdersItems[key].num += order.orderItems[key].num;
-					}
-					else{
-						allOrdersItems[key] = {name: key, num: order.orderItems[key].num}
-					}
-					adminOrder.orderItems.push({name: key, num: order.orderItems[key].num, price: order.orderItems[key].price})
-				};
-				adminOrder.orderPrice = order.orderPrice;
-				const user = Meteor.users.findOne({_id: order.userId});
-				if(user.emails){
-					adminEmail = user.emails[0].address;
-				}
-				else{
-					adminEmail = user.services.google.email
-				}
-			}
-		});
-		let arrOfAllItems = [];
-		for(key in allOrdersItems){
-			arrOfAllItems.push(allOrdersItems[key]);
-		}
-		const totalPrice = event.totalPrice;
-		Email.send({
-  					to: adminEmail,
-  					from: "pizza-day@email.com",
-  					subject: "Your Order",
-  					html: SSR.render('htmlAdminEmail', { adminOrder, arrOfAllItems,  totalPrice})
-		});
-	},
 	'changeStatus'(eventId){
-		if(Events.findOne({_id: eventId}).creator != this.userId){
-			throw new Meteor.Error('Acces Denied');
-		};
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
 		const event = Events.findOne({_id: eventId});
+		if(event.creator != curentUser){
+			throw new Meteor.Error('Acces denied');
+		};
 		const status = event.status;
 		switch(status){
 			case 'ordered':

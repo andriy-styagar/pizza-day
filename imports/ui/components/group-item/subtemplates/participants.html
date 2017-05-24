@@ -1,0 +1,20 @@
+<template name='participants'>
+	<ul class="list-unstyled">
+         <li>
+           	<i class="fa fa-user" aria-hidden="true"></i>
+             {{groupAdmnin.profile.name}}
+             <span class="pull-right">admin</span>
+             <hr>
+          </li>
+          {{#each groupParticipants}}
+           	<li>
+              <i class="fa fa-user" aria-hidden="true"></i>
+              {{profile.name}}
+              {{#if isGrouppAdmin}}
+                 <i class="fa fa-user-times pull-right btn remove-participant-but" id={{_id}}></i>
+               {{/if}}
+               <hr>
+            </li>
+          {{/each}}
+    </ul>
+</template>

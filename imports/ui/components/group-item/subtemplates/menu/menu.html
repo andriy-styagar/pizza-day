@@ -1,0 +1,30 @@
+<template name='menu'>
+     <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>      
+          </tr>
+        </thead>
+        <tbody>
+            {{#each menu}}
+              <tr>
+                <td>{{name}}</td>
+                <td>{{price}}</td>
+                <td><i class="fa fa-times pull-right btn remove-menu-but" item-id={{_id}}></i></td>
+              </tr>
+            {{/each}}
+        </tbody>
+      </table>
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="email">Name</label>
+              <input type="text" class="form-control" id="name-of-pizza-in">
+            </div>
+            <div class="form-group">
+              <label for="pwd">Price</label>
+              <input type="text" class="form-control" id="price-in">
+            </div>
+            <button class="btn btn-default" id="add-menu-but">Add</button>
+          </form>
+</template>

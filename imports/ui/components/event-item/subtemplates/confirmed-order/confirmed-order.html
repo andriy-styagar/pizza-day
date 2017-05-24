@@ -1,0 +1,29 @@
+<template name='confirmedOrder'>
+  <table class="table">
+    <thead>
+      <tr style="">
+         <th class="text-left">Name</th>
+         <th class="text-left">Quantity</th>
+         <th class="text-left">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each orderData.orderItems}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{num}}</td>
+          <td>{{price}}</td>
+        </tr>
+      {{/each}}
+        <tr style="">
+          <td class="text-left" colspan='2'>Total Price</td>
+          <td>                               
+            <span>{{orderData.orderPrice}}$</span>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  {{#if isOrderingStatus status}}
+      <button class=" btn btn-default" id="delete-order-but">Delete Order</button>
+  {{/if}}
+</template>

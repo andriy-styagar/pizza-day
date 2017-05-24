@@ -6,13 +6,8 @@
 			</div>
 			<ul class="nav navbar-nav">
 			{{#if currentUser}}
-				{{#unless isGroupParticipant}}
 					<li ><a href="/create-group">Create Group</a></li>
-				{{/unless}}
-				<li ><a href="/groups">Groups</a></li>
-				{{#if isGroupParticipant}}
-					<li ><a href="/events">Events</a></li>
-				{{/if}}
+					<li ><a href="/groups">Groups</a></li>
 			{{/if}}
 			</ul>
 			<ul class="nav navbar-nav pull-right">

@@ -1,0 +1,20 @@
+<template name='eventMenu'>
+  <table class="table">
+    <thead>
+      <tr style="">
+        <th class="text-center" colspan='3'>Menu</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each menu groupId}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{price}}$</td>
+        <td>
+            <i class="add-order-item-but fa fa-plus pull-right btn" id='{{_id}}' price='{{price}}' name='{{name}}'></i>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>        
+</template>

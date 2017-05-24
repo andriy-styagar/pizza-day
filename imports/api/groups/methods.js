@@ -1,88 +1,108 @@
-import { Groups, Images} from './collections.js';
+import { Groups, Images, Menu} from './collections.js';
 import { check } from 'meteor/check';
 
+function checkAuthorisation(userId){
+	if(!userId){
+		throw new Meteor.Error('Not Authorized');
+	}
+};
+function checkGroupAdmin(group, userId){
+	if (group.admin != userId){
+		throw new Meteor.Error('Acces denied');
+	}
+};
 Meteor.methods({
 	'createGroup'(name, logo){
+		const userId = Meteor.userId();
+		checkAuthorisation(userId);
 		check(name, String);
 		check(logo, String);
 		const groupId = Groups.insert({
 			name: name,
 			logo: logo,
-			admin: Meteor.userId(),
-			participants: [Meteor.userId()],
+			admin: userId,
+			participants: [ userId ],
 			menu: []
 		});
-		const userId = Meteor.userId();
 		Meteor.users.update(
-					{ _id: userId },
-					{ $set: {
-							'group': groupId,
-							'groupAdmin': true 
-						}
-				});		
+			{ _id: userId },
+			{ $push: { groups: groupId}});
+		return groupId;	
 	},
-	'removeGroup'(groupId){
+	'deleteGroup'(groupId){
+		const userId = Meteor.userId();
+		checkAuthorisation(userId);
 		check(groupId, String);
-		const group = Groups.find({_id: groupId}).fetch()[0];
-		if (group.admin != Meteor.userId()){
-			throw new Meteor.Error('Acces denied');
-		}
+		const group = Groups.findOne({_id: groupId});
+		checkGroupAdmin(group, userId);
 		const participants = group.participants;
 		participants.forEach(function(id){
 			Meteor.users.update(
-				{_id: id},
-				{$set: {'group': null}});
+				{ _id: id},
+				{ $pull: {'groups': groupId}});
 		});
-		Meteor.users.update(
-			{_id: group.admin},
-			{$set: {'group': null, 'groupAdmin': false}});
 		Groups.remove({_id: groupId});
 	},
-	'addParticapant'(userId,groupId){
+	'addParticapant'( userId, groupId){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
 		check(userId, String);
 		check(groupId, String);
-		const group = Groups.find({_id: groupId}).fetch()[0];
-		if (group.admin != Meteor.userId()){
-			throw new Meteor.Error('Acces denied');
-		}
+		const group = Groups.findOne({_id: groupId});
+		checkGroupAdmin(group, curentUser);
 		Groups.update({_id: groupId},
-			{ $push: {participants: userId }});
+			{ $push: { participants: userId }});
 		Meteor.users.update({ _id: userId },
-			{ $set: {'group': groupId }});
-		},
-	'removeParticipant'(userId,groupId){
+			{ $push: {'groups': groupId }});
+	},
+	'removeParticipant'( userId, groupId){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
 		check(userId, String);
 		check(groupId, String);
-		const group = Groups.find({_id: groupId}).fetch()[0];
-		if (group.admin != Meteor.userId()){
-			throw new Meteor.Error('Acces denied');
-		}
+		const group = Groups.findOne({_id: groupId});
+		checkGroupAdmin(group, curentUser);
 		Groups.update({_id: groupId},
 			{$pull: {participants: userId}});
 		Meteor.users.update({ _id: userId },
-			{ $set: {'group': null }});
+			{ $pull: {'groups': groupId }});
 		},
 	'addMenuItem'(groupId, name, price){
-		check(name, String);
-		const menu = Groups.find({_id: groupId}).fetch()[0].menu;
-		menu.forEach(function(el){
-			if(name == el.name){
-				throw new Meteor.Error('Item already exists');
-			}
+		console.log("add menu");
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
+		const group = Groups.findOne({_id: groupId});
+		if(group.participants.indexOf(curentUser) === -1){
+			throw new Meteor.Error('Acces denied');
+		}
+		const NonEmptyString = Match.Where((x) => {
+  			check(x, String);
+  			return x.length > 0;
 		});
+		check(name, NonEmptyString);
+		if(Menu.findOne({name: name, group: groupId})){
+			throw new Meteor.Error('Item exists');
+		}
 		if(!(price*1)){
-				throw new Meteor.Error('Invalid price');
-		};
+			throw new Meteor.Error('Invalid price');
+		}
+		const menuId = Menu.insert({name: name, price: price, group: groupId});
+		Groups.update(
+			{ _id: groupId},
+			{ $push: { menu: menuId }});
+	},
+	'removeMenuItem'(groupId, itemId){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
+		const group = Groups.findOne({_id: groupId});
+		if(group.participants.indexOf(curentUser) == -1){
+			throw new Meteor.Error('Acces denied');
+		}
+		check(groupId, String);
+		check(itemId, String);
+		Menu.remove({ _id:  itemId});
 		Groups.update(
 			{_id: groupId},
-			{$push: {menu: {name: name, price: price}}});
-	},
-	'removeMenuItem'(groupId, name){
-		check(groupId, String);
-		check(name, String);
-		Groups.update(
-		{_id:  groupId},
-		{$pull: {menu: {name: name}}});
+			{ $pull: { menu: itemId }})
 	}
-	
 });

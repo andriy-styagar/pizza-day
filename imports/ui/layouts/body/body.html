@@ -1,8 +1,9 @@
-<template name="main-layout">
-	<body>
-		{{> nav}}
-		{{> sign_in}}
-		{{> sign_up}}
-		{{> Template.dynamic template=content}}
-	</body>
+<template name="App_body">
+  <body>
+  	{{> nav}}
+  	{{> sign_in}}
+	{{> sign_up}}
+  	{{> Template.dynamic template=main}}
+  </body>
 </template>
+

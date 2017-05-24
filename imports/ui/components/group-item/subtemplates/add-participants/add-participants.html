@@ -1,0 +1,12 @@
+<template name='addParticipants'>
+	 <ul class="list-unstyled">
+         {{#each addParticipants}}
+                <li>
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  {{profile.name}}
+                   <i class="fa fa-user-plus pull-right btn add-participant-but" id={{_id}}></i>
+                  <hr>
+                </li>
+           {{/each}}
+       </ul>
+</template>

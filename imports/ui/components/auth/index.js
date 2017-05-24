@@ -1,20 +1,20 @@
 import { Meteor } from 'meteor/meteor';
-import './sign_in.html';
-import './sign_up.html';
+import './sign-in.html';
+import './sign-up.html';
+import { errorHandler } from '../error-handler.js';
 
 Template.sign_in.events({
 	"click #sign_in_but": function(e, t){
-		console.log("ssdsds");
 		const email = $("input[name=email]").val();
-		const pass  = $("input[name=pass]").val()
-		Meteor.loginWithPassword(email, pass, function (err) {
-			if (err) {
-				swal('', err.reason, 'error');
-			}
-		})
+		const pass  = $("input[name=pass]").val();
+		if(!email){
+			swal('', 'Email may not be empty', 'error');
+			throw new Meteor.Error();	
+		}
+		Meteor.loginWithPassword(email, pass, errorHandler)
 	},
 	"click #sign_in_g_but": function(){
-			Meteor.loginWithGoogle();
+			Meteor.loginWithGoogle(errorHandler);
 	}
 });
 Template.sign_up.events({
@@ -24,16 +24,11 @@ Template.sign_up.events({
 		option.password  = $("#sign_up_form input[name=pass]").val();
 		option.profile = {};
 		const name = $("#sign_up_form input[name=user-name]").val();
-			if(name){
-				option.profile.name = name;
-				Accounts.createUser(option,function(err){
-				if (err){
-					swal('', err.reason, 'error');
-					}
-				});
-			}
-			else
-				swal('', 'Name may not be empty', 'error');			
+		if(!name){
+			swal('', 'Name may not be empty', 'error');	
+		};
+		option.profile.name = name;
+		Accounts.createUser(option, errorHandler);		
 	}
 	
 });

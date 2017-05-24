@@ -1,0 +1,11 @@
+<template name='eventParticipants'>
+	<ul class="list-unstyled" style="margin: 5px">
+    	{{#each eventParticipants participants}}
+    		<li>
+    			<i class="fa fa-user" aria-hidden="true"></i>
+    			{{profile.name}}
+    			<hr>
+    		</li>
+    	{{/each}}
+    </ul>
+</template>

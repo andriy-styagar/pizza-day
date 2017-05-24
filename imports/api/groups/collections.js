@@ -1,28 +1,19 @@
 import  { Mongo } from 'meteor/mongo';
 
 const Groups = new Mongo.Collection('groups');
-
-Groups.allow({
-	insert: function (id, doc) {
-		return id && !Meteor.user().profile.group;
-	},
-	update: function (id, doc) {
-		return id && Meteor.user().profile.group == doc._id;
-	},
-	
-});
-
-
-
 const Images = new FS.Collection('images',{
-	 stores: [new FS.Store.FileSystem("images")]
+	 stores: [new FS.Store.FileSystem("images")],
+	 filter: {
+	 	allow: {
+	 		contentTupes: ['image/*']
+	 	}
+	 }
 });
-
 Images.allow({
 	insert:   function () { return true;},
  	update:   function () { return true;},
   	remove:   function () { return true;},
   	download: function () { return true;}
 });
-
-export { Groups, Images};
+const Menu = new Mongo.Collection('menu');
+export { Groups, Images, Menu};

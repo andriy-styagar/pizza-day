@@ -1,36 +1,36 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+
 import '../../ui/layouts/body/body.js';
-import '../../ui/components/users/users.js';
+import '../../ui/components/create-group/create-group.js';
 import '../../ui/components/groups/groups.js';
+import '../../ui/components/group-item/group-item.js';
 import '../../ui/components/events/events.js';
+import '../../ui/components/event-item/event-item.js';
 
-
-FlowRouter.route('/',{
-	name: 'home',
-	action: function () {
-		BlazeLayout.render('main-layout',{content: "users"})
-	}
-});
 FlowRouter.route('/create-group', {
 	action: function (){
-		BlazeLayout.render('main-layout', {content: 'createGroup'})
+		BlazeLayout.render('App_body', { main: 'createGroup'})
 	}
 });
-FlowRouter.route('/groups',{
-	action: function(){
-		BlazeLayout.render('main-layout', {content: 'groups'})
+FlowRouter.route('/groups', {
+  name: 'App.home',
+  action() {
+    	BlazeLayout.render('App_body', { main: 'groups' });
+  },
+});
+FlowRouter.route('/', {
+	action: function (){
+		BlazeLayout.render('App_body', { main: 'events'})
 	}
 });
-
 FlowRouter.route('/groups/:groupId',{
-	name: 'groupItem',
 	action: function(){
-		BlazeLayout.render('main-layout', {content: 'groupItem'})
+		BlazeLayout.render('App_body', { main: 'groupItem'})
 	}
-})
-FlowRouter.route('/events',{
+});
+FlowRouter.route('/:eventId',{
 	action: function(){
-		BlazeLayout.render('main-layout', {content: 'event'})
+		BlazeLayout.render('App_body', { main: 'eventItem'})
 	}
-})
+});

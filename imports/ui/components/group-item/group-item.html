@@ -1,0 +1,36 @@
+<template name='groupItem'>
+  <div class="row" style="margin: 0">
+    <div class="col-md-3 " id="group_item_left">
+      <div id="group-title" class="text-center">
+        <h4>{{group.name}}</h4>
+      </div>
+      <img src="{{logoUrl}}" class="img-responsive">
+      <div class="" id="group-button">
+      {{#if isGroupAdmin curentUser group.admin}}
+        <div class="btn btn-default " id="remove-group-but">Delete Group</div>
+        <div class="btn btn-default " id="create-event-but">Create Event</div>
+      {{/if}}
+      </div>
+    </div>
+    <div class="col-md-9" id="group_item_right">
+      <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#participants">Group Participants</a></li>
+          <li><a data-toggle="tab" href="#menu">Menu</a></li>
+          {{#if isGroupAdmin curentUser group.admin}}
+            <li><a data-toggle="tab" href="#add-participants">Add Participants</a></li>
+          {{/if}}
+      </ul>
+      <div class="tab-content">
+          <div id="participants" class="tab-pane fade in active">
+            {{> participants group=group}}
+          </div>
+          <div id="menu" class="tab-pane fade">
+            {{> menu}}
+          </div>
+          <div id="add-participants" class="tab-pane fade">
+            {{> addParticipants group=group}} 
+          </div>
+      </div>
+    </div>
+  </div>
+</template>

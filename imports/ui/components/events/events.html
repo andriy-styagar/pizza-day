@@ -1,161 +1,17 @@
-<template name='event'>
-{{#if event}}
-	{{#if isUnconfirmedParticipant}}
-		<div class="col-md-6 col-md-offset-3" id="confirm-event-dialog">
-			<h4>Started Event. Confirm Participantion?</h4>		
-			<div class="btn btn-default" id="confirm-ev-but">Confirm</div>
-			<div class="btn btn-default" id="refuse-ev-but">Refuse</div>
-		</div>
-	{{else if isConfirmedParticipant}}
-		<div class="col-md-3" style="padding: 5px;" >
-		 <div id="event-info">
-		 	<div class="row text-center" id="event-name">
-				<h5>Pizza day for <a href="/groups/{{eventData.groupId}}">{{event.groupName}}</a></h5>
-			</div>
-			<div class="">
-				<ul class="list-unstyled" style="">
-					<li ><span>status: {{event.status}}</span><hr ></li>
-					<li ><span>date: {{eventDate}}</span><hr></li>
-					<li ><span>participanrs: {{numParticipants}}</span><hr></li>
-				</ul>
+<template name='events'>
+	<div class="container-fluid">
 
-			</div>
-		 </div>
-		 <div class="" id="ev-admin-pannel">
-		 	{{#if isEventCreator}}
-				<div class="btn btn-default" id="delete-ev-but">Delete Event</div>
-				<div class="btn btn-default" id="change-st-but">Change Status</div>
-			{{/if}}
-		 </div>	
-		</div>
-		<div class="col-md-9" id="event-data">
-			<div style="" >
-				<ul class="nav nav-tabs" >
-					<li>
-						<a data-toggle="tab" href="#event-participants">
-							 Participants
+		<ul class="list-unstyled">
+			{{#each events}}
+				<li>
+						<a href="/{{_id}}">
+							<h4>Pizza Day for {{groupName}}</h4>	
 						</a>
-					</li>
-					<li>
-						<a data-toggle="tab" href="#ordered-participants">
-							Ordered participants
-						</a>
-					</li>
-					<li>
-						<a data-toggle="tab" href="#my-order">
-							My Order
-						</a>
-					</li>
-				</ul>
-				<div class="tab-content" >
-					<div class="tab-pane" id="event-participants">
-						<ul class="list-unstyled" style="margin: 5px">
-    						{{#each eventParticipants}}
-    								<li>
-    								<i class="fa fa-user" aria-hidden="true"></i>
-    									{{profile.name}}
-    								<hr>
-    							</li>
-    						{{/each}}
-    					</ul>
-					</div>
-					<div class="tab-pane" id="ordered-participants">
-						<ul class="list-unstyled" style="margin: 5px">
-    						{{#each orderedParticipants}}
-    								<li>
-    								<i class="fa fa-user" aria-hidden="true"></i>
-    									{{profile.name}}
-    								<hr>
-    							</li>
-    						{{/each}}
-    					</ul>
-					</div>		
-					<div class="tab-pane" id="my-order" >
-					{{#unless isOrderedParticipant}}
-						<div class="col-md-6" id="event-menu" style=" ">
-							<table class="table">
-                  				<thead>
-                    				<tr style="">
-                      					<th class="text-center" colspan='3'>Menu</th>
-                  					</tr>
-                				</thead>
-                				<tbody>
-                   				{{#each event.menu}}
-                       				<tr>
-                        				<td>{{name}}</td>
-                        				<td>{{price}}$</td>
-                        				<td>
-                        					<i class="add-order-item-but fa fa-plus pull-right btn " name='{{name}}' price='{{price}}' ></i>
-                        				</td>
-                      				</tr>
-                   				{{/each}}
-              					</tbody>
-           					 </table>
-						</div>
-						<div class="col-md-6" style=" ">
-							<table class="table">
-                  				<thead>
-                    				<tr style="">
-                      					<th class="text-center" colspan='4'>My Order</th>
-                  					</tr>
-                				</thead>
-                				<tbody>
-                					{{#each unconfirmedOrder.orderItems}}
-                   					<tr>
-                        				<td><!-- {{name}} --></td>
-                        				<td>{{price}}$</td>
-                        				<td>{{num}}</td>
-                        				<td>
-                        					<i class="delete-order-item-but fa fa-times pull-right btn" name='{{name}}'></i>
-                        				</td>
-                      				</tr>
-                      				{{/each}}
-                      				<tr style="">
-                      					<td class="text-left" colspan='3'>Total Price</td>
-                      					<td >                      					
-                      						<span>{{unconfirmedOrder.orderPrice}}$</span>
-										</td>
-                  					</tr>
-              					</tbody>
-           					 </table>
-           					 <button class=" btn btn-default" id="create-order-but">Create Order</button>
-						</div>
-					{{else}}
-						<div class="col-md-12" style=" ">
-							<table class="table">
-                  				<thead>
-                    				<tr style="">
-                      					<th class="text-center" colspan='4'>My Order</th>
-                  					</tr>
-                				</thead>
-                				<tbody>
-                					{{#each confirmedOrder.orderItems}}
-                   					<tr>
-                        				<td>{{name}}</td>
-                        				<td >{{num}}</td>
-                        				<td class="text-right" colspan="2">{{price}}$</td>
-                      				</tr>
-                      				{{/each}}
-                      				<tr style="">
-                      					<td class="text-left" colspan='3'>Total Price</td>
-                      					<td class="text-right">                		
-                      						<span>{{confirmedOrder.orderPrice}}$</span>
-										</td>
-                  					</tr>
-              					</tbody>
-           					 </table>
-           					 {{#if isOrderingStatus}}
-           					 	<button class=" btn btn-default" id="delete-order-but">		Delete Order
-           						 </button>
-           					 {{/if}}
-						</div>
-					{{/unless}}
-					</div>		
-				</div>
-			</div>	
-		</div>
-	{{/if}}
-{{else}}
-		<h4>No Events</h4>
-{{/if}}
+						<span class="">{{formattedDate date}}</span>
+					<span class="pull-right">{{status}}</span>
+					<hr>
+				</li>
+			{{/each}}
+		</ul>
+	</div>
 </template>
