@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each orderData.orderItems}}
+      {{#each order.orderItems}}
         <tr>
           <td>{{name}}</td>
           <td>{{num}}</td>
@@ -18,7 +18,7 @@
         <tr style="">
           <td class="text-left" colspan='2'>Total Price</td>
           <td>                               
-            <span>{{orderData.orderPrice}}$</span>
+            <span>{{order.orderPrice}}$</span>
           </td>
         </tr>
     </tbody>

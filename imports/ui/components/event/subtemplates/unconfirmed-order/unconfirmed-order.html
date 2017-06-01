@@ -1,22 +1,24 @@
 <template name='unconfirmedOrder'>
+  
   <table class="table">
     <thead>
+      <tr style="">
+          <th colspan='4' class="text-center"><span>My Order</span></th>
+      </tr>
+    </thead>
+    <tbody>
       <tr style="">
           <th>Name</th>
           <th>Quantity</th>
           <th class="colspan-2">Price</th>
-          
       </tr>
-    </thead>
-    <tbody>
-    {{#with order orderData}}
       {{#each orderItems}}
         <tr>
           <td>{{name}}</td>
           <td>{{num}}</td>
           <td >{{price}}</td>
           <td>
-            <i class="delete-order-item-but fa fa-times pull-right btn" id='{{id}}' itemPrice='{{itemPrice}} price={{price}}'></i>
+            <i class="delete-order-item-but fa fa-times pull-right btn" name='{{name}}'></i>
           </td>
         </tr>
       {{/each}}
@@ -26,7 +28,7 @@
             <span>{{ orderPrice }}$</span>
           </td>
         </tr>
-      {{/with}}
+
     </tbody>
   </table>
   <button class=" btn btn-default" id="create-order-but">Create Order</button>

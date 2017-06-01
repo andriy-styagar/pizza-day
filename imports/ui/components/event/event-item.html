@@ -1,0 +1,68 @@
+<template name="eventItem">
+    {{#if isUnconfirmedParticipant event}}
+        <div class="col-md-6 col-md-offset-3" id="confirm-event-dialog">
+            <h4>Started Event. Confirm Participantion?</h4>
+            <div class="btn btn-default confirm-ev-but" val='confirm'>Confirm</div>
+            <div class="btn btn-default confirm-ev-but" val='refuse'>Refuse</div>
+        </div>
+    {{else if isConfirmedParticipant event}}
+        <div class="col-md-3" style="padding: 5px;" >
+            <div id="event-info">
+                <div class="row text-center" id="event-name">
+                    <h5>Pizza day for {{event.groupName}}</h5>
+                </div>
+                <div class="">
+                    <ul class="list-unstyled" style="">
+                        <li ><span>Status: {{event.status}}</span><hr ></li>
+                        <li ><span>Date: {{formattedDate event.date}}</span><hr></li>
+                        <li ><span>Participants: {{numParticipants event}}</span><hr></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="" id="ev-admin-pannel">
+                {{#if isEventCreator event}}
+                    <div class="btn btn-default" id="delete-ev-but">Delete Event</div>
+                    <div class="btn btn-default" id="change-st-but">Change Status</div>
+                {{/if}}
+            </div>
+        </div>
+        <div class="col-md-9" id="event-data">
+            <div style="" >
+                <ul class="nav nav-tabs" >
+                    <li>
+                        <a data-toggle="tab" href="#event-participants">Participants</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#ordered-participants">Ordered participants
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#my-order">My Order</a>
+                    </li>
+                </ul>
+                <div class="tab-content" >
+                    <div class="tab-pane" id="event-participants">
+                        {{> eventParticipants participants = event.confirmedParticipants }}
+                    </div>
+                    <div class="tab-pane" id="ordered-participants">
+                        {{> eventParticipants participants = event.orderedParticipants }}
+                    </div>
+                    <div class="tab-pane" id="my-order" >
+                        {{#unless isOrderedParticipant event}}
+                            <div class="col-md-6" id="event-menu" style=" ">
+                                {{> eventMenu groupId = event.group}}
+                            </div>
+                            <div class="col-md-6" style=" ">
+                                {{> unconfirmedOrder orderItems=unconfirmedOrderItems orderPrice=unconfirmedOrderPrice}}
+                            </div>
+                        {{else}}
+                            <div class="col-md-12" style=" ">
+                                {{> confirmedOrder status = event.status}}
+                            </div>
+                        {{/unless}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+</template>

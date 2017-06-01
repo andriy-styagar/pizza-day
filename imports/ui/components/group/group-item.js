@@ -3,28 +3,11 @@ import './subtemplates/add-participants/add-participants.js';
 import './subtemplates/menu/menu.js';
 import './group-item.html';
 import './style.css';
-import { Images, Groups } from '../../../api/groups/collections.js';
 
 Template.groupItem.onCreated(function () {
-	const instance = this;
-	instance.groupId = FlowRouter.getParam('groupId');
-	const group = instance.subscribe('groupItem',instance.groupId);
-	instance.group = Groups.find({_id: instance.groupId});
-	instance.autorun( function() {
-		if(group.ready()){
-			instance.subscribe('logo', instance.group.fetch()[0].logo);
-		}
-	});
+    this.groupId = FlowRouter.getParam('groupId');
+});
 
-});
-Template.groupItem.helpers({
-	'logoUrl'(){
-		return Images.findOne({_id: Template.instance().group.fetch()[0].logo}).url();
-	},
-	'group'(){
-		return Template.instance().group.fetch()[0];
-	}
-});
 Template.registerHelper('curentUser', () => {
   return Meteor.userId();
 });
@@ -38,7 +21,7 @@ Template.groupItem.events({
 				swal('', err.reason, "error");
 			}
 			else
-				FlowRouter.go('/');
+				FlowRouter.go('/groups');
 		})
 	},
 	'click #create-event-but': function (e, t){

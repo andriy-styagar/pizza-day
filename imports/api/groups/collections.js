@@ -2,7 +2,7 @@ import  { Mongo } from 'meteor/mongo';
 
 const Groups = new Mongo.Collection('groups');
 const Images = new FS.Collection('images',{
-	 stores: [new FS.Store.FileSystem("images")],
+	 stores: [new FS.Store.GridFS("images")],
 	 filter: {
 	 	allow: {
 	 		contentTupes: ['image/*']

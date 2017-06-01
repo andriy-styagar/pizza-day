@@ -1,4 +1,4 @@
-import { Events } from './collections.js';
+import { Events, Orders } from './collections.js';
 function checkAuthorisation(userId){
 	if(!userId){
 		throw new Meteor.Error('Not Authorized');
@@ -36,4 +36,9 @@ Meteor.publish('eventParticipants', function(eventId){
 			throw new Meteor.Error('Acces denied');
 	}
 	return  Meteor.users.find({_id: {$in: event.confirmedParticipants}});
+});
+Meteor.publish('order', function(eventId){
+    const curentUser = this.userId;
+    checkAuthorisation(curentUser);
+    return  Orders.find({userId: curentUser, eventId: eventId});
 });

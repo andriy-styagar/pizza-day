@@ -11,6 +11,11 @@ function checkGroupAdmin(group, userId){
 		throw new Meteor.Error('Acces denied');
 	}
 };
+function checkGroupParticipation(participants, userId){
+    if(participants.indexOf(userId) === -1){
+        throw new Meteor.Error('Acces denied');
+    }
+};
 Meteor.methods({
 	'createGroup'(name, logo){
 		const userId = Meteor.userId();
@@ -41,6 +46,7 @@ Meteor.methods({
 				{ _id: id},
 				{ $pull: {'groups': groupId}});
 		});
+		Menu.remove({group: groupId});
 		Groups.remove({_id: groupId});
 	},
 	'addParticapant'( userId, groupId){
@@ -68,13 +74,10 @@ Meteor.methods({
 			{ $pull: {'groups': groupId }});
 		},
 	'addMenuItem'(groupId, name, price){
-		console.log("add menu");
 		const curentUser = Meteor.userId();
 		checkAuthorisation(curentUser);
 		const group = Groups.findOne({_id: groupId});
-		if(group.participants.indexOf(curentUser) === -1){
-			throw new Meteor.Error('Acces denied');
-		}
+        checkGroupParticipation(group.participants, curentUser);
 		const NonEmptyString = Match.Where((x) => {
   			check(x, String);
   			return x.length > 0;
@@ -95,9 +98,7 @@ Meteor.methods({
 		const curentUser = Meteor.userId();
 		checkAuthorisation(curentUser);
 		const group = Groups.findOne({_id: groupId});
-		if(group.participants.indexOf(curentUser) == -1){
-			throw new Meteor.Error('Acces denied');
-		}
+		checkGroupParticipation(group.participants, curentUser);
 		check(groupId, String);
 		check(itemId, String);
 		Menu.remove({ _id:  itemId});
