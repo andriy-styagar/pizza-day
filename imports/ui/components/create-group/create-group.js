@@ -27,4 +27,3 @@ Template.createGroup.events({
 			}
 		}
 	});
-

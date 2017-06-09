@@ -174,8 +174,10 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/common.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/suite.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/bdd.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/rajit_bootstrap3-datepicker/1.6.4/web.browser/lib/js/bootstrap-datepicker.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_access-point/0.1.49/web.browser/packages/cfs_access-point.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/http.meta.2.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/rajit_bootstrap3-datepicker/1.6.4/web.browser/lib/css/bootstrap-datepicker3.css" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/http.meta.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/ms.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_base-package/0.0.30/web.browser/packages/cfs_base-package.js" />
@@ -274,6 +276,7 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/hooks/before.hook.async.error.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/options/async-only.async.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/hooks/afterEach.hook.error.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_gridfs/0.0.33/web.browser/packages/cfs_gridfs.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/options/delay-fail.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/options/delay.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/kadira_blaze-layout/2.3.0/web.browser/lib/client/layout.js" />
@@ -571,8 +574,10 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/common.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/suite.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/lib/interfaces/bdd.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/rajit_bootstrap3-datepicker/1.6.4/web.browser/lib/js/bootstrap-datepicker.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_access-point/0.1.49/web.browser/packages/cfs_access-point.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/http.meta.2.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/rajit_bootstrap3-datepicker/1.6.4/web.browser/lib/css/bootstrap-datepicker3.css" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/http.meta.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/ms.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_base-package/0.0.30/web.browser/packages/cfs_base-package.js" />
@@ -671,6 +676,7 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/hooks/before.hook.async.error.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/options/async-only.async.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/hooks/afterEach.hook.error.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_gridfs/0.0.33/web.browser/packages/cfs_gridfs.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/options/delay-fail.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/practicalmeteor_mocha/2.4.5_6/web.browser/test/integration/fixtures/options/delay.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/kadira_blaze-layout/2.3.0/web.browser/lib/client/layout.js" />

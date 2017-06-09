@@ -100,6 +100,20 @@ Meteor.methods({
 		}
 		Meteor.call('checkOrderedStatus', eventId);
 	},
+	'refuseOrder'(eventId){
+		const curentUser = Meteor.userId();
+		checkAuthorisation(curentUser);
+		check(eventId, String);
+		const event = Events.findOne({_id: eventId});
+		checkEventParticipation(event.confirmedParticipants, curentUser)
+		Events.update(
+				{ _id: eventId },
+				{ 
+					$push: { orderedParticipants: curentUser}
+				});	
+		Meteor.call('checkOrderedStatus', eventId);
+
+	},
 	'checkOrderedStatus'(eventId){
 		const curentUser = this.userId;
 		checkAuthorisation(curentUser);
@@ -161,12 +175,12 @@ Meteor.methods({
 		for(key in totalOrder){
 			arrOfAllItems.push({name: key, num: totalOrder[key]});
 		}
-		Email.send({
+		  Email.send({
   			to: adminEmailAdd,
   			from: "pizza-day@email.com",
   			subject: "Your Order",
   			html: SSR.render('htmlAdminEmail', { adminOrder, arrOfAllItems,  totalPrice: event.totalPrice})
-		});	
+		  });		
 	},
 	'deleteOrder'(eventId){
 		const curentUser = this.userId;

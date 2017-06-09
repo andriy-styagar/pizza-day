@@ -98,5 +98,8 @@ Template.eventItem.events({
 	},
 	'click #change-st-but': function (e, t) {
 		Meteor.call('changeStatus', t.eventId, errorHandler);
+	},
+	'click #refuse-order-but': function (e, t) {
+			Meteor.call('refuseOrder', t.eventId, errorHandler);
 	}
 });
