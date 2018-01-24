@@ -1,10 +1,10 @@
 <template name="eventItem">
-    {{#if isUnconfirmedParticipant event}}
-        <div class="col-md-6 col-md-offset-3" id="confirm-event-dialog">
-            <h4>Started Event. Confirm Participantion?</h4>
-            <div class="btn btn-default confirm-ev-but" val='confirm'>Confirm</div>
-            <div class="btn btn-default confirm-ev-but" val='refuse'>Refuse</div>
-        </div>
+{{#if isUnconfirmedParticipant event}}
+    <div class="col-md-6 col-md-offset-3" id="confirm-event-dialog">
+        <h4>Started Event. Confirm Participantion?</h4>
+        <div class="btn btn-default confirm-ev-but" val='confirm'>Confirm</div>
+        <div class="btn btn-default confirm-ev-but" val='refuse'>Refuse</div>
+    </div>
     {{else if isConfirmedParticipant event}}
         <div class="col-md-3" style="padding: 5px;" >
             <div id="event-info">
